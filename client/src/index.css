@@ -1,0 +1,62 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  /* --- Kleuren --- */
+  --ink: #1f2733;          /* gedempt inktblauw — basistekst, headers */
+  --ink-soft: #4a5468;     /* zachtere variant voor secundaire tekst */
+  --paper: #faf7f0;        /* warm off-white — achtergrond */
+  --card: #ffffff;         /* kaart-achtergrond */
+  --coral: #d65f4c;        /* accentkleur — acties, links, highlights */
+  --coral-dark: #b94a39;   /* hover-state van accent */
+  --line: #e3ddd0;         /* subtiele randen/lijnen */
+  --tag-bg: #eef1ea;       /* achtergrond van tags */
+
+  /* --- Typografie --- */
+  --font-display: 'Fraunces', serif;
+  --font-body: 'Inter', sans-serif;
+
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--paper);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--paper);
+  background-image:
+    radial-gradient(circle at 1px 1px, var(--line) 1px, transparent 0);
+  background-size: 24px 24px;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+a {
+  color: var(--coral);
+}
+
+button {
+  font-family: var(--font-body);
+}
+
+/* Toegankelijkheid: zichtbare focus-ring overal, behalve bij muisklik */
+:focus-visible {
+  outline: 2px solid var(--coral);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

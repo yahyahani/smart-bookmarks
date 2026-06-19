@@ -1,0 +1,315 @@
+/* ============ Algemene knoppen & velden ============ */
+
+.btn-primary {
+  background: var(--coral);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.7rem 1.3rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  white-space: nowrap;
+}
+.btn-primary:hover:not(:disabled) { background: var(--coral-dark); }
+.btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--ink-soft);
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+.btn-ghost:hover { border-color: var(--coral); color: var(--coral); }
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+.field input,
+.add-form input,
+.search-input {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  padding: 0.65rem 0.9rem;
+  border: 1.5px solid var(--line);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--ink);
+}
+.field input:focus,
+.add-form input:focus,
+.search-input:focus {
+  border-color: var(--coral);
+}
+
+/* ============ Auth pagina ============ */
+
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.auth-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 2.5rem;
+  max-width: 380px;
+  width: 100%;
+  box-shadow: 0 8px 30px -10px rgba(31, 39, 51, 0.15);
+}
+
+.auth-eyebrow {
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--coral);
+  font-weight: 600;
+  margin: 0 0 0.6rem;
+}
+
+.auth-title {
+  font-size: 1.7rem;
+  margin-bottom: 0.5rem;
+}
+
+.auth-subtitle {
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+  line-height: 1.5;
+  margin: 0 0 1.6rem;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.auth-error {
+  background: #fdeeec;
+  color: var(--coral-dark);
+  font-size: 0.85rem;
+  padding: 0.6rem 0.8rem;
+  border-radius: 6px;
+  margin: 0;
+}
+
+.auth-switch {
+  background: none;
+  border: none;
+  color: var(--ink-soft);
+  font-size: 0.85rem;
+  margin-top: 1.3rem;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  padding: 0;
+}
+.auth-switch:hover { color: var(--coral); }
+
+/* ============ Dashboard ============ */
+
+.dashboard {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 4rem;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 2rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.dashboard-eyebrow {
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--coral);
+  font-weight: 600;
+  margin: 0 0 0.3rem;
+}
+
+.dashboard-title {
+  font-size: 2rem;
+}
+
+.dashboard-user {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+}
+
+.add-form {
+  display: flex;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+.add-url-input { flex: 2 1 260px; }
+.add-tags-input { flex: 1 1 160px; }
+
+.search-row { margin-bottom: 2rem; }
+.search-input { width: 100%; max-width: 320px; }
+
+.dashboard-status,
+.dashboard-error {
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+.dashboard-error { color: var(--coral-dark); }
+
+.empty-state {
+  text-align: center;
+  padding: 4rem 1rem;
+  color: var(--ink-soft);
+}
+.empty-state p { margin: 0.3rem 0; }
+.empty-state-sub { font-size: 0.88rem; opacity: 0.8; }
+
+/* ============ Bookmark grid & kaart ============ */
+
+.bm-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.4rem;
+}
+
+.bm-card {
+  position: relative;
+  background: var(--card);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.bm-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px -12px rgba(31, 39, 51, 0.25);
+}
+
+.bm-image-link { display: block; }
+.bm-image {
+  width: 100%;
+  aspect-ratio: 1.9 / 1;
+  object-fit: cover;
+  display: block;
+  background: var(--tag-bg);
+}
+
+.bm-body {
+  padding: 1rem 1.1rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  position: relative;
+}
+
+/* Signature element: een "afgescheurd kaartje" randje boven de inhoud,
+   als verwijzing naar een ouderwetse bibliotheek-catalogusfiche. */
+.bm-body::before {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background-image: radial-gradient(circle, var(--paper) 2.5px, transparent 2.6px);
+  background-size: 14px 14px;
+  background-position: 0 -7px;
+}
+
+.bm-source {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  margin-top: 0.3rem;
+}
+.bm-favicon { width: 14px; height: 14px; border-radius: 3px; }
+
+.bm-title {
+  font-family: var(--font-display);
+  font-size: 1.08rem;
+  font-weight: 600;
+  color: var(--ink);
+  text-decoration: none;
+  line-height: 1.35;
+}
+.bm-title:hover { color: var(--coral); }
+
+.bm-description {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  line-height: 1.5;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.bm-tags {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  margin-top: 0.3rem;
+}
+.bm-tag {
+  background: var(--tag-bg);
+  color: var(--ink-soft);
+  font-size: 0.72rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 100px;
+  font-weight: 500;
+}
+
+.bm-delete {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--ink-soft);
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.15s ease, color 0.15s ease;
+}
+.bm-card:hover .bm-delete,
+.bm-delete:focus-visible {
+  opacity: 1;
+}
+.bm-delete:hover { color: var(--coral-dark); }
+
+@media (max-width: 480px) {
+  .bm-delete { opacity: 1; }
+}
