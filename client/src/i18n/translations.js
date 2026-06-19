@@ -1,0 +1,120 @@
+// Alle teksten van de app, per taal. Elke taal heeft exact dezelfde keys,
+// zodat er nooit een vertaling "ontbreekt" als je een nieuwe taal toevoegt.
+export const translations = {
+  nl: {
+    dir: 'ltr',
+    appName: 'Smart Bookmarks',
+
+    // Auth-pagina
+    authEyebrow: 'Smart Bookmarks',
+    welcomeBackTitle: 'Welkom terug',
+    startCollectionTitle: 'Begin je collectie',
+    loginSubtitle: 'Log in om je opgeslagen links te bekijken.',
+    registerSubtitle: 'Maak een account om links te bewaren met automatische previews.',
+    emailLabel: 'E-mailadres',
+    emailPlaceholder: 'jij@voorbeeld.com',
+    passwordLabel: 'Wachtwoord',
+    passwordPlaceholder: 'Minimaal 6 tekens',
+    loginButton: 'Inloggen',
+    registerButton: 'Account aanmaken',
+    submitting: 'Even geduld…',
+    switchToRegister: 'Nog geen account? Maak er een aan',
+    switchToLogin: 'Heb je al een account? Log in',
+
+    // Dashboard
+    dashboardEyebrow: 'Smart Bookmarks',
+    dashboardTitle: 'Jouw collectie',
+    logoutButton: 'Uitloggen',
+    urlPlaceholder: 'Plak hier een link…',
+    tagsPlaceholder: 'tags (komma-gescheiden)',
+    saveButton: 'Bewaren',
+    savingButton: 'Ophalen…',
+    searchPlaceholder: 'Zoek in je bookmarks…',
+    loadingBookmarks: 'Bookmarks laden…',
+    emptyStateTitle: 'Nog niets bewaard.',
+    emptyStateSubtitle: 'Plak een link hierboven om te beginnen.',
+    deleteAriaLabel: 'Verwijder bookmark',
+    deleteTitle: 'Verwijderen',
+
+    // Taalwisselaar
+    languageLabel: 'Taal',
+  },
+
+  en: {
+    dir: 'ltr',
+    appName: 'Smart Bookmarks',
+
+    authEyebrow: 'Smart Bookmarks',
+    welcomeBackTitle: 'Welcome back',
+    startCollectionTitle: 'Start your collection',
+    loginSubtitle: 'Log in to see your saved links.',
+    registerSubtitle: 'Create an account to save links with automatic previews.',
+    emailLabel: 'Email address',
+    emailPlaceholder: 'you@example.com',
+    passwordLabel: 'Password',
+    passwordPlaceholder: 'At least 6 characters',
+    loginButton: 'Log in',
+    registerButton: 'Create account',
+    submitting: 'One moment…',
+    switchToRegister: "Don't have an account? Create one",
+    switchToLogin: 'Already have an account? Log in',
+
+    dashboardEyebrow: 'Smart Bookmarks',
+    dashboardTitle: 'Your collection',
+    logoutButton: 'Log out',
+    urlPlaceholder: 'Paste a link here…',
+    tagsPlaceholder: 'tags (comma-separated)',
+    saveButton: 'Save',
+    savingButton: 'Fetching…',
+    searchPlaceholder: 'Search your bookmarks…',
+    loadingBookmarks: 'Loading bookmarks…',
+    emptyStateTitle: 'Nothing saved yet.',
+    emptyStateSubtitle: 'Paste a link above to get started.',
+    deleteAriaLabel: 'Delete bookmark',
+    deleteTitle: 'Delete',
+
+    languageLabel: 'Language',
+  },
+
+  ar: {
+    dir: 'rtl',
+    appName: 'Smart Bookmarks',
+
+    authEyebrow: 'Smart Bookmarks',
+    welcomeBackTitle: 'مرحباً بعودتك',
+    startCollectionTitle: 'ابدأ مجموعتك',
+    loginSubtitle: 'سجّل الدخول لعرض الروابط المحفوظة.',
+    registerSubtitle: 'أنشئ حساباً لحفظ الروابط مع معاينة تلقائية.',
+    emailLabel: 'البريد الإلكتروني',
+    emailPlaceholder: 'you@example.com',
+    passwordLabel: 'كلمة المرور',
+    passwordPlaceholder: '6 أحرف على الأقل',
+    loginButton: 'تسجيل الدخول',
+    registerButton: 'إنشاء حساب',
+    submitting: 'لحظة من فضلك…',
+    switchToRegister: 'ليس لديك حساب؟ أنشئ واحداً',
+    switchToLogin: 'لديك حساب بالفعل؟ سجّل الدخول',
+
+    dashboardEyebrow: 'Smart Bookmarks',
+    dashboardTitle: 'مجموعتك',
+    logoutButton: 'تسجيل الخروج',
+    urlPlaceholder: 'ألصق رابطاً هنا…',
+    tagsPlaceholder: 'الوسوم (مفصولة بفواصل)',
+    saveButton: 'حفظ',
+    savingButton: 'جارٍ الجلب…',
+    searchPlaceholder: 'البحث في الروابط المحفوظة…',
+    loadingBookmarks: 'جارٍ تحميل الروابط…',
+    emptyStateTitle: 'لا توجد روابط محفوظة بعد.',
+    emptyStateSubtitle: 'ألصق رابطاً أعلاه للبدء.',
+    deleteAriaLabel: 'حذف الرابط',
+    deleteTitle: 'حذف',
+
+    languageLabel: 'اللغة',
+  },
+};
+
+export const languageOptions = [
+  { code: 'nl', label: 'Nederlands' },
+  { code: 'en', label: 'English' },
+  { code: 'ar', label: 'العربية' },
+];

@@ -1,3 +1,5 @@
+import { useLanguage } from '../i18n/LanguageContext';
+
 function getHostname(url) {
   try {
     return new URL(url).hostname.replace('www.', '');
@@ -6,11 +8,15 @@ function getHostname(url) {
   }
 }
 
-export default function BookmarkCard({ bookmark, onDelete }) {
+export default function BookmarkCard({ bookmark, onDelete, animationDelay = 0 }) {
+  const { t } = useLanguage();
   const { url, title, description, image_url, favicon_url, tags } = bookmark;
 
   return (
-    <article className="bm-card">
+    <article
+      className="bm-card"
+      style={{ animationDelay: `${animationDelay}ms` }}
+    >
       {image_url && (
         <a href={url} target="_blank" rel="noopener noreferrer" className="bm-image-link">
           <img src={image_url} alt="" className="bm-image" loading="lazy" />
@@ -42,8 +48,8 @@ export default function BookmarkCard({ bookmark, onDelete }) {
         type="button"
         className="bm-delete"
         onClick={() => onDelete(bookmark.id)}
-        aria-label={`Verwijder bookmark: ${title}`}
-        title="Verwijderen"
+        aria-label={`${t('deleteAriaLabel')}: ${title}`}
+        title={t('deleteTitle')}
       >
         ×
       </button>

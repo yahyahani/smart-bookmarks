@@ -1,8 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import { bookmarksApi } from '../api/client';
 import BookmarkCard from '../components/BookmarkCard';
+import LanguageSwitcher from '../components/LanguageSwitcher';
+import { useLanguage } from '../i18n/LanguageContext';
 
 export default function DashboardPage({ user, onLogout }) {
+  const { t } = useLanguage();
   const [bookmarks, setBookmarks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -72,13 +75,14 @@ export default function DashboardPage({ user, onLogout }) {
     <div className="dashboard">
       <header className="dashboard-header">
         <div>
-          <p className="dashboard-eyebrow">Smart Bookmarks</p>
-          <h1 className="dashboard-title">Jouw collectie</h1>
+          <p className="dashboard-eyebrow">{t('dashboardEyebrow')}</p>
+          <h1 className="dashboard-title">{t('dashboardTitle')}</h1>
         </div>
         <div className="dashboard-user">
+          <LanguageSwitcher />
           <span>{user.email}</span>
           <button type="button" className="btn-ghost" onClick={onLogout}>
-            Uitloggen
+            {t('logoutButton')}
           </button>
         </div>
       </header>
@@ -87,27 +91,27 @@ export default function DashboardPage({ user, onLogout }) {
         <input
           type="text"
           required
-          placeholder="Plak hier een link…"
+          placeholder={t('urlPlaceholder')}
           value={newUrl}
           onChange={(e) => setNewUrl(e.target.value)}
           className="add-url-input"
         />
         <input
           type="text"
-          placeholder="tags (komma-gescheiden)"
+          placeholder={t('tagsPlaceholder')}
           value={newTags}
           onChange={(e) => setNewTags(e.target.value)}
           className="add-tags-input"
         />
         <button type="submit" className="btn-primary" disabled={adding}>
-          {adding ? 'Ophalen…' : 'Bewaren'}
+          {adding ? t('savingButton') : t('saveButton')}
         </button>
       </form>
 
       <div className="search-row">
         <input
           type="search"
-          placeholder="Zoek in je bookmarks…"
+          placeholder={t('searchPlaceholder')}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="search-input"
@@ -117,16 +121,21 @@ export default function DashboardPage({ user, onLogout }) {
       {error && <p className="dashboard-error">{error}</p>}
 
       {loading ? (
-        <p className="dashboard-status">Bookmarks laden…</p>
+        <p className="dashboard-status">{t('loadingBookmarks')}</p>
       ) : bookmarks.length === 0 ? (
         <div className="empty-state">
-          <p>Nog niets bewaard.</p>
-          <p className="empty-state-sub">Plak een link hierboven om te beginnen.</p>
+          <p>{t('emptyStateTitle')}</p>
+          <p className="empty-state-sub">{t('emptyStateSubtitle')}</p>
         </div>
       ) : (
         <div className="bm-grid">
-          {bookmarks.map((bookmark) => (
-            <BookmarkCard key={bookmark.id} bookmark={bookmark} onDelete={handleDelete} />
+          {bookmarks.map((bookmark, index) => (
+            <BookmarkCard
+              key={bookmark.id}
+              bookmark={bookmark}
+              onDelete={handleDelete}
+              animationDelay={index * 40}
+            />
           ))}
         </div>
       )}

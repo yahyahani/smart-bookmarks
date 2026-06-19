@@ -1,7 +1,10 @@
 import { useState } from 'react';
 import { authApi } from '../api/client';
+import { useLanguage } from '../i18n/LanguageContext';
+import LanguageSwitcher from '../components/LanguageSwitcher';
 
 export default function AuthPage({ onAuthSuccess }) {
+  const { t } = useLanguage();
   const [mode, setMode] = useState('login'); // 'login' of 'register'
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -27,45 +30,47 @@ export default function AuthPage({ onAuthSuccess }) {
 
   return (
     <div className="auth-page">
+      <div className="auth-lang-bar">
+        <LanguageSwitcher />
+      </div>
+
       <div className="auth-card">
-        <p className="auth-eyebrow">Smart Bookmarks</p>
+        <p className="auth-eyebrow">{t('authEyebrow')}</p>
         <h1 className="auth-title">
-          {mode === 'login' ? 'Welkom terug' : 'Begin je collectie'}
+          {mode === 'login' ? t('welcomeBackTitle') : t('startCollectionTitle')}
         </h1>
         <p className="auth-subtitle">
-          {mode === 'login'
-            ? 'Log in om je opgeslagen links te bekijken.'
-            : 'Maak een account om links te bewaren met automatische previews.'}
+          {mode === 'login' ? t('loginSubtitle') : t('registerSubtitle')}
         </p>
 
         <form onSubmit={handleSubmit} className="auth-form">
           <label className="field">
-            <span>E-mailadres</span>
+            <span>{t('emailLabel')}</span>
             <input
               type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="jij@voorbeeld.com"
+              placeholder={t('emailPlaceholder')}
             />
           </label>
 
           <label className="field">
-            <span>Wachtwoord</span>
+            <span>{t('passwordLabel')}</span>
             <input
               type="password"
               required
               minLength={6}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Minimaal 6 tekens"
+              placeholder={t('passwordPlaceholder')}
             />
           </label>
 
           {error && <p className="auth-error">{error}</p>}
 
           <button type="submit" className="btn-primary" disabled={loading}>
-            {loading ? 'Even geduld…' : mode === 'login' ? 'Inloggen' : 'Account aanmaken'}
+            {loading ? t('submitting') : mode === 'login' ? t('loginButton') : t('registerButton')}
           </button>
         </form>
 
@@ -77,9 +82,7 @@ export default function AuthPage({ onAuthSuccess }) {
             setError(null);
           }}
         >
-          {mode === 'login'
-            ? 'Nog geen account? Maak er een aan'
-            : 'Heb je al een account? Log in'}
+          {mode === 'login' ? t('switchToRegister') : t('switchToLogin')}
         </button>
       </div>
     </div>

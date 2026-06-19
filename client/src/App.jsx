@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import AuthPage from './pages/AuthPage';
 import DashboardPage from './pages/DashboardPage';
 import { getToken } from './api/client';
+import { LanguageProvider } from './i18n/LanguageContext';
 
-export default function App() {
+function AppContent() {
   const [user, setUser] = useState(null);
   const [checkedToken, setCheckedToken] = useState(false);
 
@@ -37,5 +38,13 @@ export default function App() {
     <DashboardPage user={user} onLogout={handleLogout} />
   ) : (
     <AuthPage onAuthSuccess={handleAuthSuccess} />
+  );
+}
+
+export default function App() {
+  return (
+    <LanguageProvider>
+      <AppContent />
+    </LanguageProvider>
   );
 }

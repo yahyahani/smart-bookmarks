@@ -9,10 +9,11 @@
   font-weight: 600;
   font-size: 0.95rem;
   cursor: pointer;
-  transition: background 0.15s ease;
+  transition: background 0.15s ease, transform 0.1s ease;
   white-space: nowrap;
 }
 .btn-primary:hover:not(:disabled) { background: var(--coral-dark); }
+.btn-primary:active:not(:disabled) { transform: scale(0.97); }
 .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
 
 .btn-ghost {
@@ -23,6 +24,7 @@
   padding: 0.5rem 1rem;
   font-size: 0.9rem;
   cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
 }
 .btn-ghost:hover { border-color: var(--coral); color: var(--coral); }
 
@@ -43,6 +45,7 @@
   border-radius: 8px;
   background: var(--card);
   color: var(--ink);
+  transition: border-color 0.15s ease;
 }
 .field input:focus,
 .add-form input:focus,
@@ -50,9 +53,48 @@
   border-color: var(--coral);
 }
 
+/* Visuele click-feedback overal waar het past */
+.btn-primary:focus-visible,
+.btn-ghost:focus-visible {
+  outline-offset: 3px;
+}
+
+/* ============ Taalwisselaar ============ */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+}
+
+.lang-switcher select {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  padding: 0.45rem 0.7rem;
+  border: 1.5px solid var(--line);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+.lang-switcher select:hover,
+.lang-switcher select:focus-visible {
+  border-color: var(--coral);
+}
+
+.auth-lang-bar {
+  position: absolute;
+  top: 1.5rem;
+  inset-inline-end: 1.5rem;
+}
+
 /* ============ Auth pagina ============ */
 
 .auth-page {
+  position: relative;
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -68,6 +110,7 @@
   max-width: 380px;
   width: 100%;
   box-shadow: 0 8px 30px -10px rgba(31, 39, 51, 0.15);
+  animation: rise-in 0.4s ease both;
 }
 
 .auth-eyebrow {
@@ -104,6 +147,7 @@
   padding: 0.6rem 0.8rem;
   border-radius: 6px;
   margin: 0;
+  animation: shake 0.3s ease;
 }
 
 .auth-switch {
@@ -123,7 +167,7 @@
 
 .dashboard {
   max-width: 880px;
-  margin: 0 auto;
+  margin-inline: auto;
   padding: 2.5rem 1.5rem 4rem;
 }
 
@@ -180,6 +224,7 @@
   text-align: center;
   padding: 4rem 1rem;
   color: var(--ink-soft);
+  animation: rise-in 0.4s ease both;
 }
 .empty-state p { margin: 0.3rem 0; }
 .empty-state-sub { font-size: 0.88rem; opacity: 0.8; }
@@ -201,19 +246,24 @@
   display: flex;
   flex-direction: column;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
+  animation: rise-in 0.45s ease both;
 }
 .bm-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 10px 24px -12px rgba(31, 39, 51, 0.25);
 }
 
-.bm-image-link { display: block; }
+.bm-image-link { display: block; overflow: hidden; }
 .bm-image {
   width: 100%;
   aspect-ratio: 1.9 / 1;
   object-fit: cover;
   display: block;
   background: var(--tag-bg);
+  transition: transform 0.3s ease;
+}
+.bm-card:hover .bm-image {
+  transform: scale(1.03);
 }
 
 .bm-body {
@@ -225,14 +275,15 @@
 }
 
 /* Signature element: een "afgescheurd kaartje" randje boven de inhoud,
-   als verwijzing naar een ouderwetse bibliotheek-catalogusfiche. */
+   als verwijzing naar een ouderwetse bibliotheek-catalogusfiche.
+   Werkt symmetrisch, dus geen aanpassing nodig voor RTL. */
 .bm-body::before {
   content: '';
   display: block;
   position: absolute;
   top: 0;
-  left: 0;
-  right: 0;
+  inset-inline-start: 0;
+  inset-inline-end: 0;
   height: 6px;
   background-image: radial-gradient(circle, var(--paper) 2.5px, transparent 2.6px);
   background-size: 14px 14px;
@@ -256,6 +307,7 @@
   color: var(--ink);
   text-decoration: none;
   line-height: 1.35;
+  transition: color 0.15s ease;
 }
 .bm-title:hover { color: var(--coral); }
 
@@ -288,7 +340,7 @@
 .bm-delete {
   position: absolute;
   top: 0.6rem;
-  right: 0.6rem;
+  inset-inline-end: 0.6rem;
   width: 28px;
   height: 28px;
   border-radius: 50%;
@@ -302,14 +354,43 @@
   align-items: center;
   justify-content: center;
   opacity: 0;
-  transition: opacity 0.15s ease, color 0.15s ease;
+  transition: opacity 0.15s ease, color 0.15s ease, transform 0.1s ease;
 }
 .bm-card:hover .bm-delete,
 .bm-delete:focus-visible {
   opacity: 1;
 }
 .bm-delete:hover { color: var(--coral-dark); }
+.bm-delete:active { transform: scale(0.9); }
 
 @media (max-width: 480px) {
   .bm-delete { opacity: 1; }
+}
+
+/* ============ Animaties ============ */
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bm-card,
+  .auth-card,
+  .empty-state,
+  .auth-error {
+    animation: none;
+  }
 }
