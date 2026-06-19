@@ -1,39 +1,71 @@
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap');
 
-:root {
-  /* --- Kleuren --- */
-  --ink: #1f2733;          /* gedempt inktblauw — basistekst, headers */
-  --ink-soft: #4a5468;     /* zachtere variant voor secundaire tekst */
-  --paper: #faf7f0;        /* warm off-white — achtergrond */
-  --card: #ffffff;         /* kaart-achtergrond */
-  --coral: #d65f4c;        /* accentkleur — acties, links, highlights */
-  --coral-dark: #b94a39;   /* hover-state van accent */
-  --line: #e3ddd0;         /* subtiele randen/lijnen */
-  --tag-bg: #eef1ea;       /* achtergrond van tags */
+/*
+  Themasysteem: alle kleuren leven in CSS custom properties, geschaald
+  per data-theme attribuut op <html>. Componenten gebruiken alleen de
+  variabelen (--surface, --ink, etc.) en weten niets van licht/donker —
+  dat scheidt "wat de UI doet" van "hoe de UI er nu uitziet".
+*/
 
-  /* --- Typografie ---
-     Noto Sans Arabic staat voorin de fallback-stack, zodat Arabische tekst
-     (en ook Arabische cijfers/leestekens binnen Engelse tekst) er altijd
-     verzorgd uitziet, zonder dat we een apart stijlsysteem nodig hebben. */
+:root {
+  /* --- Typografie (theme-onafhankelijk) --- */
   --font-display: 'Fraunces', 'Noto Sans Arabic', serif;
   --font-body: 'Inter', 'Noto Sans Arabic', sans-serif;
 
-  font-family: var(--font-body);
-  color: var(--ink);
-  background: var(--paper);
+  /* --- Licht thema (standaard) --- */
+  --bg-base: #f3ede6;
+  --ink: #211d2e;
+  --ink-soft: #5b5470;
+  --coral: #e8694a;
+  --coral-dark: #cc5439;
+
+  /* Glas-oppervlakken: semi-transparant wit, met blur */
+  --surface: rgba(255, 255, 255, 0.55);
+  --surface-solid: rgba(255, 255, 255, 0.92);
+  --surface-border: rgba(255, 255, 255, 0.6);
+  --surface-shadow: rgba(80, 60, 100, 0.18);
+  --tag-bg: rgba(255, 255, 255, 0.55);
+
+  /* Blob-kleuren voor de ambient achtergrond (licht thema: zacht pastel) */
+  --blob-1: #ffb199;
+  --blob-2: #b9a4ff;
+  --blob-3: #9fe3d0;
+}
+
+:root[data-theme='dark'] {
+  --bg-base: #15121f;
+  --ink: #f1ecfb;
+  --ink-soft: #ada6c4;
+  --coral: #ff8a68;
+  --coral-dark: #ffa687;
+
+  --surface: rgba(40, 34, 58, 0.55);
+  --surface-solid: rgba(28, 24, 42, 0.92);
+  --surface-border: rgba(255, 255, 255, 0.1);
+  --surface-shadow: rgba(0, 0, 0, 0.5);
+  --tag-bg: rgba(255, 255, 255, 0.08);
+
+  /* Blob-kleuren voor donker thema: dieper, met meer gloed */
+  --blob-1: #ff6b4a;
+  --blob-2: #6c4cff;
+  --blob-3: #2dd4bf;
 }
 
 * {
   box-sizing: border-box;
 }
 
-body {
+html, body {
   margin: 0;
   min-height: 100vh;
-  background: var(--paper);
-  background-image:
-    radial-gradient(circle at 1px 1px, var(--line) 1px, transparent 0);
-  background-size: 24px 24px;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--bg-base);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  position: relative;
 }
 
 h1, h2, h3 {
@@ -43,8 +75,6 @@ h1, h2, h3 {
   margin: 0;
 }
 
-/* Arabisch is een verbonden schrift: negatieve letter-spacing breekt
-   de visuele verbinding tussen letters, dus we zetten 'm terug naar normaal. */
 :dir(rtl) h1,
 :dir(rtl) h2,
 :dir(rtl) h3 {

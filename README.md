@@ -12,6 +12,9 @@ Paste a URL, and the app scrapes the page's metadata for you, the same way Twitt
 - 🔍 **Search** — filter bookmarks by title, description, or tag
 - 🗑️ **Full CRUD** — add, update, and delete bookmarks
 - 🔒 **Per-user data isolation** — every user only ever sees their own bookmarks
+- 🌍 **Multi-language** — Dutch, English, and Arabic, with full RTL layout support
+- 🌗 **Light & dark mode** — glassmorphism design with an animated ambient background
+- 🐳 **Dockerized** — run the entire stack (database, API, frontend) with one command
 
 ## Tech stack
 
@@ -23,56 +26,76 @@ Paste a URL, and the app scrapes the page's metadata for you, the same way Twitt
 
 **Frontend**
 - React (Vite)
-- Plain CSS (no framework) with a custom design system
+- Plain CSS (no framework) with a custom design system — CSS custom properties for theming, logical properties for RTL support, `backdrop-filter` for the glass effect
+
+**Infrastructure**
+- Docker + Docker Compose (Postgres, Express API, and an nginx-served frontend build)
 
 ## Screenshots
 
-*(Add a screenshot or two of the dashboard here — drag an image into the GitHub README editor, or place it in a `docs/` folder and reference it with `![Dashboard](docs/dashboard.png)`)*
+*(Add a screenshot or two here — drag an image into the GitHub README editor, or place it in a `docs/` folder and reference it with `![Dashboard](docs/dashboard.png)`)*
 
 ## Getting started
 
-### Prerequisites
-- [Node.js](https://nodejs.org/) (v18 or higher, for native `fetch` support)
-- [PostgreSQL](https://www.postgresql.org/) running locally
+You can run this project either directly with Node.js, or with Docker. Docker is the faster path if you just want to see it running; running it directly is better if you want to read/modify the code as you go.
 
-### 1. Clone the repository
+### Option A — Docker (recommended)
+
+**Prerequisites:** [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+
 ```bash
 git clone https://github.com/yahyahani/smart-bookmarks.git
 cd smart-bookmarks
+cp .env.example .env
+```
+Open `.env` and set `JWT_SECRET` to a random string (generate one with `openssl rand -hex 32`).
+
+```bash
+docker compose up --build
 ```
 
-### 2. Set up the database
+This starts three containers:
+| Service  | What it is                          | URL                     |
+|----------|--------------------------------------|--------------------------|
+| `db`     | PostgreSQL (tables created automatically on first run) | internal only |
+| `server` | Express API                          | http://localhost:3001   |
+| `client` | React app, built and served via nginx | http://localhost:5174  |
+
+Open **http://localhost:5174** in your browser. Stop everything with `Ctrl+C`, or `docker compose down` to also remove the containers (add `-v` to also wipe the database volume).
+
+### Option B — Run directly with Node.js
+
+**Prerequisites:**
+- [Node.js](https://nodejs.org/) v18+ (for native `fetch` support)
+- [PostgreSQL](https://www.postgresql.org/) running locally
+
 ```bash
+git clone https://github.com/yahyahani/smart-bookmarks.git
+cd smart-bookmarks
 createdb smart_bookmarks
 ```
 
-### 3. Set up the backend
+**Backend:**
 ```bash
 cd server
 npm install
 cp .env.example .env
 ```
-Open `.env` and fill in your database credentials and a random `JWT_SECRET` (you can generate one with `openssl rand -hex 32`).
+Fill in your database credentials and a random `JWT_SECRET` in `.env`.
 
-Create the tables:
 ```bash
 psql smart_bookmarks -f src/db/schema.sql
-```
-
-Start the server:
-```bash
 npm run dev
 ```
-The API will run on `http://localhost:3001` (or whatever port you set in `.env`).
+API runs on `http://localhost:3001`.
 
-### 4. Set up the frontend
-In a new terminal:
+**Frontend** (in a new terminal):
 ```bash
 cd client
 npm install
 npm run dev
 ```
-The app will be available at `http://localhost:5173`.
+App runs on `http://localhost:5173`.
 
 ## API overview
 
@@ -87,11 +110,21 @@ The app will be available at `http://localhost:5173`.
 
 Authenticated requests require an `Authorization: Bearer <token>` header.
 
+## Internationalization
+
+The UI is available in Dutch, English, and Arabic via a small custom i18n system (`client/src/i18n`). Arabic uses a true RTL layout — the whole interface mirrors (button placement, text alignment, icon position), not just the text direction. This is done with CSS logical properties (`inset-inline-start/end`, `margin-inline`) rather than a separate RTL stylesheet, so the same CSS works for both directions automatically.
+
+## Theming
+
+Light and dark mode are implemented as a set of CSS custom properties (`client/src/index.css`) that switch based on a `data-theme` attribute on the `<html>` element. Components only ever reference semantic variables like `--surface` or `--ink` — they don't know or care which theme is active. The animated background blobs and `backdrop-filter` glass panels are what make the theme switch feel alive rather than just a color swap.
+
 ## Project structure
 
 ```
 smart-bookmarks/
+├── docker-compose.yml      # Orchestrates db + server + client
 ├── server/                 # Express API
+│   ├── Dockerfile
 │   └── src/
 │       ├── controllers/    # Request handling logic
 │       ├── models/         # Database queries
@@ -100,15 +133,19 @@ smart-bookmarks/
 │       ├── utils/          # Web scraping logic
 │       └── db/             # Database connection + schema
 └── client/                 # React frontend
+    ├── Dockerfile
+    ├── nginx.conf
     └── src/
         ├── pages/          # Auth and Dashboard pages
         ├── components/     # Reusable UI components
+        ├── i18n/           # Translations + language context
+        ├── theme/          # Light/dark theme context
         └── api/            # API client
 ```
 
 ## What I learned building this
 
-This project was built to practice full-stack fundamentals: JWT-based authentication, relational database design with foreign keys, building a REST API with proper authorization checks, and basic web scraping with Cheerio.
+This project started as practice for full-stack fundamentals — JWT-based authentication, relational database design with foreign keys, building a REST API with proper authorization checks, and basic web scraping with Cheerio. It grew from there into a few more advanced areas: implementing real RTL support instead of just translating text, building a theme system with CSS custom properties, and containerizing a multi-service app with Docker Compose.
 
 ## License
 

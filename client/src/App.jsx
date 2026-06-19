@@ -3,6 +3,8 @@ import AuthPage from './pages/AuthPage';
 import DashboardPage from './pages/DashboardPage';
 import { getToken } from './api/client';
 import { LanguageProvider } from './i18n/LanguageContext';
+import { ThemeProvider } from './theme/ThemeContext';
+import AmbientBackground from './components/AmbientBackground';
 
 function AppContent() {
   const [user, setUser] = useState(null);
@@ -34,17 +36,24 @@ function AppContent() {
   // Voorkom een korte flits van de loginpagina terwijl we de token checken
   if (!checkedToken) return null;
 
-  return user ? (
-    <DashboardPage user={user} onLogout={handleLogout} />
-  ) : (
-    <AuthPage onAuthSuccess={handleAuthSuccess} />
+  return (
+    <>
+      <AmbientBackground />
+      {user ? (
+        <DashboardPage user={user} onLogout={handleLogout} />
+      ) : (
+        <AuthPage onAuthSuccess={handleAuthSuccess} />
+      )}
+    </>
   );
 }
 
 export default function App() {
   return (
-    <LanguageProvider>
-      <AppContent />
-    </LanguageProvider>
+    <ThemeProvider>
+      <LanguageProvider>
+        <AppContent />
+      </LanguageProvider>
+    </ThemeProvider>
   );
 }

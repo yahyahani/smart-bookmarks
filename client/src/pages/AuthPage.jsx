@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { authApi } from '../api/client';
 import { useLanguage } from '../i18n/LanguageContext';
 import LanguageSwitcher from '../components/LanguageSwitcher';
+import ThemeToggle from '../components/ThemeToggle';
 
 export default function AuthPage({ onAuthSuccess }) {
   const { t } = useLanguage();
@@ -31,6 +32,7 @@ export default function AuthPage({ onAuthSuccess }) {
   return (
     <div className="auth-page">
       <div className="auth-lang-bar">
+        <ThemeToggle />
         <LanguageSwitcher />
       </div>
 

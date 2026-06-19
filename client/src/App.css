@@ -1,26 +1,103 @@
-/* ============ Algemene knoppen & velden ============ */
+/* ============================================================
+   AMBIENT BACKGROUND — de bewegende blobs achter het glaseffect
+   ============================================================ */
+
+.ambient-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.ambient-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+  opacity: 0.55;
+  will-change: transform;
+}
+
+:root[data-theme='dark'] .ambient-blob {
+  opacity: 0.4;
+  filter: blur(90px);
+}
+
+.ambient-blob-1 {
+  width: 50vmax;
+  height: 50vmax;
+  top: -15vmax;
+  inset-inline-start: -10vmax;
+  background: var(--blob-1);
+  animation: float-1 26s ease-in-out infinite;
+}
+
+.ambient-blob-2 {
+  width: 42vmax;
+  height: 42vmax;
+  top: 30vh;
+  inset-inline-end: -15vmax;
+  background: var(--blob-2);
+  animation: float-2 32s ease-in-out infinite;
+}
+
+.ambient-blob-3 {
+  width: 38vmax;
+  height: 38vmax;
+  bottom: -18vmax;
+  inset-inline-start: 20vw;
+  background: var(--blob-3);
+  animation: float-3 28s ease-in-out infinite;
+}
+
+@keyframes float-1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(6vmax, 8vmax) scale(1.1); }
+}
+@keyframes float-2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-7vmax, 5vmax) scale(0.95); }
+}
+@keyframes float-3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(4vmax, -6vmax) scale(1.08); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ambient-blob { animation: none; }
+}
+
+/* ============================================================
+   ALGEMENE KNOPPEN & VELDEN
+   ============================================================ */
 
 .btn-primary {
   background: var(--coral);
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 0.7rem 1.3rem;
   font-weight: 600;
   font-size: 0.95rem;
   cursor: pointer;
-  transition: background 0.15s ease, transform 0.1s ease;
+  transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
   white-space: nowrap;
+  box-shadow: 0 4px 14px -4px var(--coral);
 }
-.btn-primary:hover:not(:disabled) { background: var(--coral-dark); }
+.btn-primary:hover:not(:disabled) {
+  background: var(--coral-dark);
+  box-shadow: 0 6px 18px -4px var(--coral);
+}
 .btn-primary:active:not(:disabled) { transform: scale(0.97); }
-.btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+.btn-primary:disabled { opacity: 0.6; cursor: not-allowed; box-shadow: none; }
 
 .btn-ghost {
-  background: transparent;
-  border: 1px solid var(--line);
+  background: var(--surface);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--surface-border);
   color: var(--ink-soft);
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 0.5rem 1rem;
   font-size: 0.9rem;
   cursor: pointer;
@@ -40,12 +117,20 @@
 .search-input {
   font-family: var(--font-body);
   font-size: 1rem;
-  padding: 0.65rem 0.9rem;
-  border: 1.5px solid var(--line);
-  border-radius: 8px;
-  background: var(--card);
+  padding: 0.7rem 0.95rem;
+  border: 1px solid var(--surface-border);
+  border-radius: 12px;
+  background: var(--surface);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   color: var(--ink);
-  transition: border-color 0.15s ease;
+  transition: border-color 0.15s ease, background-color 0.3s ease;
+}
+.field input::placeholder,
+.add-form input::placeholder,
+.search-input::placeholder {
+  color: var(--ink-soft);
+  opacity: 0.7;
 }
 .field input:focus,
 .add-form input:focus,
@@ -53,13 +138,30 @@
   border-color: var(--coral);
 }
 
-/* Visuele click-feedback overal waar het past */
-.btn-primary:focus-visible,
-.btn-ghost:focus-visible {
-  outline-offset: 3px;
-}
+/* ============================================================
+   THEME TOGGLE & TAALWISSELAAR
+   ============================================================ */
 
-/* ============ Taalwisselaar ============ */
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--surface-border);
+  background: var(--surface);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+}
+.theme-toggle:hover {
+  color: var(--coral);
+  border-color: var(--coral);
+  transform: rotate(15deg);
+}
 
 .sr-only {
   position: absolute;
@@ -72,10 +174,12 @@
 .lang-switcher select {
   font-family: var(--font-body);
   font-size: 0.85rem;
-  padding: 0.45rem 0.7rem;
-  border: 1.5px solid var(--line);
-  border-radius: 8px;
-  background: var(--card);
+  padding: 0.5rem 0.8rem;
+  border: 1px solid var(--surface-border);
+  border-radius: 12px;
+  background: var(--surface);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   color: var(--ink-soft);
   cursor: pointer;
   transition: border-color 0.15s ease;
@@ -89,9 +193,15 @@
   position: absolute;
   top: 1.5rem;
   inset-inline-end: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  z-index: 2;
 }
 
-/* ============ Auth pagina ============ */
+/* ============================================================
+   AUTH PAGINA
+   ============================================================ */
 
 .auth-page {
   position: relative;
@@ -103,14 +213,18 @@
 }
 
 .auth-card {
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: 16px;
+  background: var(--surface);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border: 1px solid var(--surface-border);
+  border-radius: 24px;
   padding: 2.5rem;
   max-width: 380px;
   width: 100%;
-  box-shadow: 0 8px 30px -10px rgba(31, 39, 51, 0.15);
-  animation: rise-in 0.4s ease both;
+  box-shadow: 0 20px 60px -16px var(--surface-shadow);
+  animation: rise-in 0.5s ease both;
+  position: relative;
+  z-index: 1;
 }
 
 .auth-eyebrow {
@@ -141,11 +255,11 @@
 }
 
 .auth-error {
-  background: #fdeeec;
+  background: rgba(232, 105, 74, 0.12);
   color: var(--coral-dark);
   font-size: 0.85rem;
   padding: 0.6rem 0.8rem;
-  border-radius: 6px;
+  border-radius: 10px;
   margin: 0;
   animation: shake 0.3s ease;
 }
@@ -163,12 +277,16 @@
 }
 .auth-switch:hover { color: var(--coral); }
 
-/* ============ Dashboard ============ */
+/* ============================================================
+   DASHBOARD
+   ============================================================ */
 
 .dashboard {
-  max-width: 880px;
+  max-width: 920px;
   margin-inline: auto;
   padding: 2.5rem 1.5rem 4rem;
+  position: relative;
+  z-index: 1;
 }
 
 .dashboard-header {
@@ -190,13 +308,13 @@
 }
 
 .dashboard-title {
-  font-size: 2rem;
+  font-size: 2.1rem;
 }
 
 .dashboard-user {
   display: flex;
   align-items: center;
-  gap: 0.8rem;
+  gap: 0.7rem;
   font-size: 0.88rem;
   color: var(--ink-soft);
 }
@@ -225,11 +343,18 @@
   padding: 4rem 1rem;
   color: var(--ink-soft);
   animation: rise-in 0.4s ease both;
+  background: var(--surface);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--surface-border);
+  border-radius: 20px;
 }
 .empty-state p { margin: 0.3rem 0; }
 .empty-state-sub { font-size: 0.88rem; opacity: 0.8; }
 
-/* ============ Bookmark grid & kaart ============ */
+/* ============================================================
+   BOOKMARK GRID & GLASS CARD
+   ============================================================ */
 
 .bm-grid {
   display: grid;
@@ -239,18 +364,21 @@
 
 .bm-card {
   position: relative;
-  background: var(--card);
-  border-radius: 12px;
+  background: var(--surface);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-radius: 18px;
   overflow: hidden;
-  border: 1px solid var(--line);
+  border: 1px solid var(--surface-border);
   display: flex;
   flex-direction: column;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-  animation: rise-in 0.45s ease both;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease;
+  animation: rise-in 0.5s ease both;
+  box-shadow: 0 8px 30px -12px var(--surface-shadow);
 }
 .bm-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 24px -12px rgba(31, 39, 51, 0.25);
+  transform: translateY(-4px);
+  box-shadow: 0 18px 40px -14px var(--surface-shadow);
 }
 
 .bm-image-link { display: block; overflow: hidden; }
@@ -263,7 +391,7 @@
   transition: transform 0.3s ease;
 }
 .bm-card:hover .bm-image {
-  transform: scale(1.03);
+  transform: scale(1.04);
 }
 
 .bm-body {
@@ -274,8 +402,7 @@
   position: relative;
 }
 
-/* Signature element: een "afgescheurd kaartje" randje boven de inhoud,
-   als verwijzing naar een ouderwetse bibliotheek-catalogusfiche.
+/* Signature element: een "afgescheurd kaartje" randje boven de inhoud.
    Werkt symmetrisch, dus geen aanpassing nodig voor RTL. */
 .bm-body::before {
   content: '';
@@ -285,9 +412,10 @@
   inset-inline-start: 0;
   inset-inline-end: 0;
   height: 6px;
-  background-image: radial-gradient(circle, var(--paper) 2.5px, transparent 2.6px);
+  background-image: radial-gradient(circle, var(--bg-base) 2.5px, transparent 2.6px);
   background-size: 14px 14px;
   background-position: 0 -7px;
+  opacity: 0.5;
 }
 
 .bm-source {
@@ -332,9 +460,10 @@
   background: var(--tag-bg);
   color: var(--ink-soft);
   font-size: 0.72rem;
-  padding: 0.2rem 0.55rem;
+  padding: 0.25rem 0.6rem;
   border-radius: 100px;
   font-weight: 500;
+  border: 1px solid var(--surface-border);
 }
 
 .bm-delete {
@@ -344,8 +473,9 @@
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  border: none;
-  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid var(--surface-border);
+  background: var(--surface-solid);
+  backdrop-filter: blur(10px);
   color: var(--ink-soft);
   font-size: 1.2rem;
   line-height: 1;
@@ -367,12 +497,14 @@
   .bm-delete { opacity: 1; }
 }
 
-/* ============ Animaties ============ */
+/* ============================================================
+   ANIMATIES
+   ============================================================ */
 
 @keyframes rise-in {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;

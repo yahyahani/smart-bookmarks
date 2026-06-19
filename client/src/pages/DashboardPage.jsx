@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { bookmarksApi } from '../api/client';
 import BookmarkCard from '../components/BookmarkCard';
 import LanguageSwitcher from '../components/LanguageSwitcher';
+import ThemeToggle from '../components/ThemeToggle';
 import { useLanguage } from '../i18n/LanguageContext';
 
 export default function DashboardPage({ user, onLogout }) {
@@ -79,6 +80,7 @@ export default function DashboardPage({ user, onLogout }) {
           <h1 className="dashboard-title">{t('dashboardTitle')}</h1>
         </div>
         <div className="dashboard-user">
+          <ThemeToggle />
           <LanguageSwitcher />
           <span>{user.email}</span>
           <button type="button" className="btn-ghost" onClick={onLogout}>
