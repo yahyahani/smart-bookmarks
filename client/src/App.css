@@ -351,6 +351,11 @@
 }
 .empty-state p { margin: 0.3rem 0; }
 .empty-state-sub { font-size: 0.88rem; opacity: 0.8; }
+.empty-state-icon {
+  color: var(--coral);
+  opacity: 0.6;
+  margin-bottom: 0.8rem;
+}
 
 /* ============================================================
    BOOKMARK GRID & GLASS CARD
@@ -465,11 +470,31 @@
   font-weight: 500;
   border: 1px solid var(--surface-border);
 }
+.bm-tag-clickable {
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.bm-tag-clickable:hover {
+  color: var(--coral-dark);
+  border-color: var(--coral);
+}
 
-.bm-delete {
+.bm-card-actions {
   position: absolute;
   top: 0.6rem;
   inset-inline-end: 0.6rem;
+  display: flex;
+  gap: 0.4rem;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+.bm-card:hover .bm-card-actions,
+.bm-action-btn:focus-visible {
+  opacity: 1;
+}
+
+.bm-action-btn {
   width: 28px;
   height: 28px;
   border-radius: 50%;
@@ -477,24 +502,147 @@
   background: var(--surface-solid);
   backdrop-filter: blur(10px);
   color: var(--ink-soft);
-  font-size: 1.2rem;
+  font-size: 1rem;
   line-height: 1;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: 0;
-  transition: opacity 0.15s ease, color 0.15s ease, transform 0.1s ease;
+  transition: color 0.15s ease, transform 0.1s ease;
 }
-.bm-card:hover .bm-delete,
-.bm-delete:focus-visible {
-  opacity: 1;
-}
-.bm-delete:hover { color: var(--coral-dark); }
-.bm-delete:active { transform: scale(0.9); }
+.bm-action-btn:hover { color: var(--coral); }
+.bm-action-btn:active { transform: scale(0.9); }
+.bm-action-btn-danger:hover { color: var(--coral-dark); }
+.bm-action-btn-danger { font-size: 1.2rem; }
 
 @media (max-width: 480px) {
-  .bm-delete { opacity: 1; }
+  .bm-card-actions { opacity: 1; }
+}
+
+/* ============================================================
+   INLINE BEWERK-MODUS VAN EEN KAART
+   ============================================================ */
+
+.bm-card-editing {
+  padding: 1.1rem;
+}
+
+.bm-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.bm-edit-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+}
+.bm-edit-field input {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid var(--surface-border);
+  border-radius: 10px;
+  background: var(--surface-solid);
+  color: var(--ink);
+}
+.bm-edit-field input:focus { border-color: var(--coral); }
+
+.bm-edit-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+}
+
+/* ============================================================
+   ACTIEVE TAG-FILTER CHIP
+   ============================================================ */
+
+.active-tag-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--surface);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--coral);
+  color: var(--coral-dark);
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 0.5rem 0.9rem;
+  border-radius: 100px;
+  cursor: pointer;
+  margin-inline-start: 0.7rem;
+}
+.active-tag-chip:hover { background: var(--surface-solid); }
+
+/* ============================================================
+   BEVESTIGINGSDIALOOG
+   ============================================================ */
+
+.dialog-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 8, 16, 0.45);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  padding: 1rem;
+  animation: fade-in 0.15s ease both;
+}
+
+.dialog-card {
+  background: var(--surface-solid);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border: 1px solid var(--surface-border);
+  border-radius: 20px;
+  padding: 1.8rem;
+  max-width: 360px;
+  width: 100%;
+  box-shadow: 0 24px 60px -16px var(--surface-shadow);
+  animation: rise-in 0.25s ease both;
+}
+
+.dialog-title {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.dialog-body {
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0 0 1.4rem;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+}
+
+.btn-danger {
+  background: var(--coral-dark);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 0.55rem 1.1rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+.btn-danger:hover { opacity: 0.88; }
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 /* ============================================================
