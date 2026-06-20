@@ -22,8 +22,17 @@ export function LanguageProvider({ children }) {
     localStorage.setItem(STORAGE_KEY, language);
   }, [language, dict.dir]);
 
-  function t(key) {
-    return dict[key] ?? key;
+  // Tweede argument is optioneel: een object met waarden die {placeholders}
+  // in de vertaling vervangen, bv. t('selectedCount', { count: 3 })
+  // → "3 selected" als de vertaling "{count} selected" is.
+  function t(key, params) {
+    let text = dict[key] ?? key;
+    if (params) {
+      for (const [k, v] of Object.entries(params)) {
+        text = text.replace(`{${k}}`, v);
+      }
+    }
+    return text;
   }
 
   return (

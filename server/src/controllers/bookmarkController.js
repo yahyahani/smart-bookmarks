@@ -6,12 +6,17 @@ const {
   deleteBookmark,
 } = require('../models/bookmarkModel');
 const { scrapeMetadata } = require('../utils/scraper');
+const { isPlausibleUrl, sanitizeTags } = require('../utils/validation');
 
-// GET /api/bookmarks?search=...&tag=...
+// GET /api/bookmarks?search=...&tag=...&collection=...
 async function getAll(req, res) {
   try {
-    const { search, tag } = req.query;
-    const bookmarks = await getBookmarksByUser(req.userId, { search, tag });
+    const { search, tag, collection } = req.query;
+    const bookmarks = await getBookmarksByUser(req.userId, {
+      search,
+      tag,
+      collectionId: collection,
+    });
     res.json(bookmarks);
   } catch (err) {
     console.error('Fout bij ophalen bookmarks:', err);
@@ -24,9 +29,14 @@ async function create(req, res) {
   try {
     const { url, tags } = req.body;
 
-    if (!url) {
+    if (!url || !url.trim()) {
       return res.status(400).json({ error: 'URL is verplicht' });
     }
+    if (!isPlausibleUrl(url)) {
+      return res.status(400).json({ error: 'Dit lijkt geen geldige URL te zijn' });
+    }
+
+    const cleanTags = sanitizeTags(tags);
 
     let metadata;
     try {
@@ -35,12 +45,15 @@ async function create(req, res) {
       console.error('Scraping mislukt:', scrapeErr.message);
       // Scraping mislukt? Dan slaan we de bookmark toch op, maar met alleen de URL.
       // Beter een bookmark zonder mooie preview, dan helemaal geen bookmark.
-      metadata = { url, title: url, description: null, imageUrl: null, faviconUrl: null };
+      // We voegen wel een https:// toe als de gebruiker dat zelf niet deed,
+      // zodat de link in de UI altijd klikbaar is.
+      const fallbackUrl = /^https?:\/\//i.test(url.trim()) ? url.trim() : `https://${url.trim()}`;
+      metadata = { url: fallbackUrl, title: fallbackUrl, description: null, imageUrl: null, faviconUrl: null };
     }
 
     const bookmark = await createBookmark(req.userId, {
       ...metadata,
-      tags: tags || [],
+      tags: cleanTags,
     });
 
     res.status(201).json(bookmark);
@@ -56,12 +69,20 @@ async function update(req, res) {
     const { id } = req.params;
     const { title, tags } = req.body;
 
+    if (title !== undefined && (!title.trim() || title.length > 500)) {
+      return res.status(400).json({ error: 'Titel moet tussen 1 en 500 tekens zijn' });
+    }
+
     const existing = await getBookmarkById(id, req.userId);
     if (!existing) {
       return res.status(404).json({ error: 'Bookmark niet gevonden' });
     }
 
-    const updated = await updateBookmark(id, req.userId, { title, tags });
+    const cleanTags = tags !== undefined ? sanitizeTags(tags) : undefined;
+    const updated = await updateBookmark(id, req.userId, {
+      title: title?.trim(),
+      tags: cleanTags,
+    });
     res.json(updated);
   } catch (err) {
     console.error('Fout bij bijwerken bookmark:', err);

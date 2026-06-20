@@ -21,3 +21,25 @@ CREATE TABLE IF NOT EXISTS bookmarks (
 
 -- Index om snel te kunnen zoeken op user_id
 CREATE INDEX IF NOT EXISTS idx_bookmarks_user_id ON bookmarks(user_id);
+
+-- Tabel voor collecties (mappen), gekoppeld aan een gebruiker
+CREATE TABLE IF NOT EXISTS collections (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  name VARCHAR(255) NOT NULL,
+  color VARCHAR(20) DEFAULT '#e8694a',
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_collections_user_id ON collections(user_id);
+
+-- Junction table: een bookmark kan in meerdere collecties zitten,
+-- en een collectie kan meerdere bookmarks bevatten (many-to-many).
+CREATE TABLE IF NOT EXISTS bookmark_collections (
+  bookmark_id INTEGER NOT NULL REFERENCES bookmarks(id) ON DELETE CASCADE,
+  collection_id INTEGER NOT NULL REFERENCES collections(id) ON DELETE CASCADE,
+  PRIMARY KEY (bookmark_id, collection_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_bookmark_collections_bookmark ON bookmark_collections(bookmark_id);
+CREATE INDEX IF NOT EXISTS idx_bookmark_collections_collection ON bookmark_collections(collection_id);

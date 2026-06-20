@@ -4,6 +4,7 @@ const cors = require('cors');
 const pool = require('./db');
 const authRoutes = require('./routes/authRoutes');
 const bookmarkRoutes = require('./routes/bookmarkRoutes');
+const collectionRoutes = require('./routes/collectionRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -15,6 +16,7 @@ app.use(express.json());
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/bookmarks', bookmarkRoutes);
+app.use('/api/collections', collectionRoutes);
 
 // Testroute om te checken of de server en database werken
 app.get('/api/health', async (req, res) => {

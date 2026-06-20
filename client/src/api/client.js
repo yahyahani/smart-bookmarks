@@ -48,4 +48,18 @@ export const bookmarksApi = {
     request(`/bookmarks/${id}`, { method: 'DELETE' }),
 };
 
+export const collectionsApi = {
+  getAll: () => request('/collections'),
+  create: (name, color) =>
+    request('/collections', { method: 'POST', body: JSON.stringify({ name, color }) }),
+  update: (id, data) =>
+    request(`/collections/${id}`, { method: 'PATCH', body: JSON.stringify(data) }),
+  remove: (id) =>
+    request(`/collections/${id}`, { method: 'DELETE' }),
+  addBookmark: (collectionId, bookmarkId) =>
+    request(`/collections/${collectionId}/bookmarks/${bookmarkId}`, { method: 'POST' }),
+  removeBookmark: (collectionId, bookmarkId) =>
+    request(`/collections/${collectionId}/bookmarks/${bookmarkId}`, { method: 'DELETE' }),
+};
+
 export { getToken };

@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useLanguage } from '../i18n/LanguageContext';
+import CollectionPicker from './CollectionPicker';
 
 function getHostname(url) {
   try {
@@ -15,14 +16,21 @@ export default function BookmarkCard({
   onSave,
   onTagClick,
   animationDelay = 0,
+  selectMode = false,
+  isSelected = false,
+  onToggleSelected,
+  collections = [],
+  onToggleCollection,
 }) {
   const { t } = useLanguage();
-  const { url, title, description, image_url, favicon_url, tags } = bookmark;
+  const { url, title, description, image_url, favicon_url, tags, collection_ids } = bookmark;
 
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(title);
   const [editTags, setEditTags] = useState((tags || []).join(', '));
   const [saving, setSaving] = useState(false);
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const collectionBtnRef = useRef(null);
 
   function startEditing() {
     setEditTitle(title);
@@ -43,6 +51,17 @@ export default function BookmarkCard({
     } finally {
       setSaving(false);
     }
+  }
+
+  // Volgt de muispositie binnen de kaart en zet die als CSS-variabelen,
+  // zodat de gloed in App.css de cursor kan volgen via een radial-gradient.
+  // Puur visueel, dus we raken geen React state aan — dat zou bij elke
+  // muisbeweging een re-render triggeren en voelt trager aan dan direct
+  // de stijl van het DOM-element bijwerken.
+  function handleMouseMove(e) {
+    const rect = e.currentTarget.getBoundingClientRect();
+    e.currentTarget.style.setProperty('--mx', `${e.clientX - rect.left}px`);
+    e.currentTarget.style.setProperty('--my', `${e.clientY - rect.top}px`);
   }
 
   if (isEditing) {
@@ -89,11 +108,25 @@ export default function BookmarkCard({
 
   return (
     <article
-      className="bm-card"
+      className={`bm-card ${selectMode ? 'bm-card-selectable' : ''} ${isSelected ? 'bm-card-selected' : ''}`}
       style={{ animationDelay: `${animationDelay}ms` }}
+      onMouseMove={handleMouseMove}
+      onClick={selectMode ? onToggleSelected : undefined}
     >
+      {selectMode && (
+        <label className="bm-select-checkbox" onClick={(e) => e.stopPropagation()}>
+          <input type="checkbox" checked={isSelected} onChange={onToggleSelected} />
+        </label>
+      )}
+
       {image_url && (
-        <a href={url} target="_blank" rel="noopener noreferrer" className="bm-image-link">
+        <a
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="bm-image-link"
+          onClick={(e) => selectMode && e.preventDefault()}
+        >
           <img src={image_url} alt="" className="bm-image" loading="lazy" />
         </a>
       )}
@@ -104,7 +137,13 @@ export default function BookmarkCard({
           <span>{getHostname(url)}</span>
         </div>
 
-        <a href={url} target="_blank" rel="noopener noreferrer" className="bm-title">
+        <a
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="bm-title"
+          onClick={(e) => selectMode && e.preventDefault()}
+        >
           {title}
         </a>
 
@@ -117,7 +156,11 @@ export default function BookmarkCard({
                 key={tag}
                 type="button"
                 className="bm-tag bm-tag-clickable"
-                onClick={() => onTagClick(tag)}
+                onClick={(e) => {
+                  if (selectMode) return; // in selectiemodus filtert een tag niet
+                  e.stopPropagation();
+                  onTagClick(tag);
+                }}
               >
                 {tag}
               </button>
@@ -126,26 +169,51 @@ export default function BookmarkCard({
         )}
       </div>
 
-      <div className="bm-card-actions">
-        <button
-          type="button"
-          className="bm-action-btn"
-          onClick={startEditing}
-          aria-label={`${t('editAriaLabel')}: ${title}`}
-          title={t('editTitle')}
-        >
-          ✎
-        </button>
-        <button
-          type="button"
-          className="bm-action-btn bm-action-btn-danger"
-          onClick={() => onDeleteRequest(bookmark)}
-          aria-label={`${t('deleteAriaLabel')}: ${title}`}
-          title={t('deleteTitle')}
-        >
-          ×
-        </button>
-      </div>
+      {!selectMode && (
+        <div className="bm-card-actions">
+          <button
+            type="button"
+            ref={collectionBtnRef}
+            className="bm-action-btn"
+            onClick={() => setPickerOpen(true)}
+            aria-label={`${t('addToCollectionLabel')}: ${title}`}
+            title={t('addToCollectionLabel')}
+          >
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M20.59 13.41 11 3.83A2 2 0 0 0 9.59 3.24H4a1 1 0 0 0-1 1v5.59a2 2 0 0 0 .59 1.41l9.58 9.59a2 2 0 0 0 2.82 0l4.6-4.6a2 2 0 0 0 0-2.82z" />
+              <circle cx="7.5" cy="7.5" r="1.5" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            className="bm-action-btn"
+            onClick={startEditing}
+            aria-label={`${t('editAriaLabel')}: ${title}`}
+            title={t('editTitle')}
+          >
+            ✎
+          </button>
+          <button
+            type="button"
+            className="bm-action-btn bm-action-btn-danger"
+            onClick={() => onDeleteRequest(bookmark)}
+            aria-label={`${t('deleteAriaLabel')}: ${title}`}
+            title={t('deleteTitle')}
+          >
+            ×
+          </button>
+        </div>
+      )}
+
+      {pickerOpen && (
+        <CollectionPicker
+          collections={collections}
+          selectedIds={collection_ids || []}
+          onToggle={(collectionId) => onToggleCollection(bookmark, collectionId)}
+          onClose={() => setPickerOpen(false)}
+          anchorRef={collectionBtnRef}
+        />
+      )}
     </article>
   );
 }

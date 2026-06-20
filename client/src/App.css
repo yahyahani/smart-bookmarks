@@ -50,6 +50,36 @@
   animation: float-3 28s ease-in-out infinite;
 }
 
+/* Kleiner en sneller dan de andere drie, zorgt voor net wat extra
+   compositorische beweging zonder de rustige, trage sfeer te verstoren. */
+.ambient-blob-4 {
+  width: 22vmax;
+  height: 22vmax;
+  top: 55vh;
+  inset-inline-start: 55vw;
+  background: var(--blob-4);
+  opacity: 0.4;
+  animation: float-4 19s ease-in-out infinite;
+}
+:root[data-theme='dark'] .ambient-blob-4 {
+  opacity: 0.3;
+}
+
+/* Subtiele filmkorrel over de hele achtergrond — het detail dat een
+   vlakke gradient laat aanvoelen als een gestructureerd materiaal in
+   plaats van een digitale verloopkleur. */
+.ambient-noise {
+  position: absolute;
+  inset: 0;
+  opacity: 0.035;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+:root[data-theme='dark'] .ambient-noise {
+  opacity: 0.05;
+  mix-blend-mode: soft-light;
+}
+
 @keyframes float-1 {
   0%, 100% { transform: translate(0, 0) scale(1); }
   50% { transform: translate(6vmax, 8vmax) scale(1.1); }
@@ -61,6 +91,10 @@
 @keyframes float-3 {
   0%, 100% { transform: translate(0, 0) scale(1); }
   50% { transform: translate(4vmax, -6vmax) scale(1.08); }
+}
+@keyframes float-4 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-5vmax, -4vmax) scale(1.15); }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -282,11 +316,203 @@
    ============================================================ */
 
 .dashboard {
-  max-width: 920px;
+  max-width: 1180px;
   margin-inline: auto;
   padding: 2.5rem 1.5rem 4rem;
   position: relative;
   z-index: 1;
+}
+
+.dashboard-layout {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+@media (max-width: 760px) {
+  .dashboard-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================================
+   COLLECTIES-ZIJBALK
+   ============================================================ */
+
+.collections-sidebar {
+  background: var(--surface);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--surface-border);
+  border-radius: 16px;
+  padding: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  position: sticky;
+  top: 1.5rem;
+}
+
+.collections-title {
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+  padding-inline-start: 0.4rem;
+}
+
+.collection-row {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.collection-item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  background: none;
+  border: none;
+  border-radius: 10px;
+  padding: 0.5rem 0.6rem;
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+  cursor: pointer;
+  text-align: start;
+  font-family: var(--font-body);
+  transition: background-color 0.15s ease, color 0.15s ease;
+  min-width: 0;
+}
+.collection-item:hover {
+  background: var(--tag-bg);
+}
+.collection-item-active {
+  background: var(--surface-solid);
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.collection-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.collection-count {
+  font-size: 0.75rem;
+  opacity: 0.7;
+}
+
+.collection-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.collection-dot-all {
+  background: var(--ink-soft);
+  opacity: 0.5;
+}
+
+.collection-delete {
+  background: none;
+  border: none;
+  color: var(--ink-soft);
+  font-size: 1.1rem;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s ease, color 0.15s ease;
+}
+.collection-row:hover .collection-delete {
+  opacity: 1;
+}
+.collection-delete:hover {
+  color: var(--coral-dark);
+}
+
+.collections-empty {
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  opacity: 0.7;
+  padding: 0.3rem 0.6rem;
+  margin: 0.3rem 0;
+}
+
+.collection-add-form {
+  display: flex;
+  gap: 0.4rem;
+  margin-top: 0.7rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--surface-border);
+}
+.collection-add-form input {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid var(--surface-border);
+  border-radius: 8px;
+  background: var(--surface-solid);
+  color: var(--ink);
+}
+.collection-add-form input:focus { border-color: var(--coral); }
+.collection-add-form .btn-ghost {
+  padding: 0.45rem 0.7rem;
+  font-size: 0.8rem;
+}
+
+/* ============================================================
+   COLLECTIE-PICKER POPOVER (op een bookmark-kaart)
+   ============================================================ */
+
+.collection-picker-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  /* Dit overlay leeft (via een React portal) direct in <body>, dus
+     buiten de overflow:hidden van de bookmark-kaart. Het vangt clicks
+     op om het menu te sluiten; de popover zelf positioneert zichzelf
+     via inline top/left, berekend vanaf de knop die hem opende. */
+}
+
+.collection-picker {
+  position: fixed;
+  background: var(--surface-solid);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--surface-border);
+  border-radius: 14px;
+  padding: 0.8rem;
+  min-width: 180px;
+  box-shadow: 0 16px 40px -14px var(--surface-shadow);
+  animation: rise-in 0.15s ease both;
+}
+
+.collection-picker-title {
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 0 0 0.5rem;
+}
+
+.collection-picker-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--ink);
+  padding: 0.4rem 0.2rem;
+  cursor: pointer;
+}
+.collection-picker-item input {
+  accent-color: var(--coral);
+  cursor: pointer;
 }
 
 .dashboard-header {
@@ -328,8 +554,32 @@
 .add-url-input { flex: 2 1 260px; }
 .add-tags-input { flex: 1 1 160px; }
 
-.search-row { margin-bottom: 2rem; }
+.search-row {
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
 .search-input { width: 100%; max-width: 320px; }
+
+.sort-select select {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  padding: 0.65rem 0.9rem;
+  border: 1px solid var(--surface-border);
+  border-radius: 12px;
+  background: var(--surface);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+.sort-select select:hover,
+.sort-select select:focus-visible {
+  border-color: var(--coral);
+}
 
 .dashboard-status,
 .dashboard-error {
@@ -355,6 +605,99 @@
   color: var(--coral);
   opacity: 0.6;
   margin-bottom: 0.8rem;
+}
+
+/* ============================================================
+   SKELETON LOADING CARDS
+   ============================================================ */
+
+.bm-skeleton {
+  background: var(--surface);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid var(--surface-border);
+  animation: rise-in 0.4s ease both;
+}
+
+.bm-skeleton-image {
+  width: 100%;
+  aspect-ratio: 1.9 / 1;
+  background: var(--tag-bg);
+}
+
+.bm-skeleton-body {
+  padding: 1rem 1.1rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.bm-skeleton-line {
+  height: 0.7rem;
+  border-radius: 6px;
+  background: linear-gradient(
+    90deg,
+    var(--tag-bg) 25%,
+    var(--surface-border) 50%,
+    var(--tag-bg) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+.bm-skeleton-line-source { width: 40%; height: 0.6rem; }
+.bm-skeleton-line-title { width: 80%; height: 1rem; margin-top: 0.2rem; }
+.bm-skeleton-line-text { width: 95%; }
+.bm-skeleton-line-text-short { width: 60%; }
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bm-skeleton-line { animation: none; }
+}
+
+/* ============================================================
+   BULK-ACTIEBALK
+   ============================================================ */
+
+.bulk-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  background: var(--surface);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--surface-border);
+  border-radius: 14px;
+  padding: 0.8rem 1.1rem;
+  margin-bottom: 1.4rem;
+  animation: rise-in 0.25s ease both;
+}
+
+.bulk-select-all {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+.bulk-count {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+
+.bulk-actions {
+  display: flex;
+  gap: 0.6rem;
+  margin-inline-start: auto;
 }
 
 /* ============================================================
@@ -384,6 +727,70 @@
 .bm-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 18px 40px -14px var(--surface-shadow);
+}
+
+.bm-card-selectable {
+  cursor: pointer;
+}
+.bm-card-selectable:hover {
+  transform: translateY(-2px);
+}
+.bm-card-selected {
+  border-color: var(--coral);
+  box-shadow: 0 0 0 2px var(--coral), 0 18px 40px -14px var(--surface-shadow);
+}
+
+.bm-select-checkbox {
+  position: absolute;
+  top: 0.7rem;
+  inset-inline-start: 0.7rem;
+  z-index: 2;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-solid);
+  backdrop-filter: blur(10px);
+  border-radius: 7px;
+  border: 1px solid var(--surface-border);
+  cursor: pointer;
+}
+.bm-select-checkbox input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--coral);
+  cursor: pointer;
+}
+
+/* Gloed die de cursor volgt — gepositioneerd via --mx/--my, die
+   BookmarkCard.jsx bijwerkt op elke muisbeweging. Alleen zichtbaar
+   bij hover, en alleen op apparaten met een echte muis (zie hieronder). */
+.bm-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    320px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(255, 255, 255, 0.16),
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+}
+:root[data-theme='dark'] .bm-card::after {
+  background: radial-gradient(
+    320px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(255, 255, 255, 0.08),
+    transparent 70%
+  );
+}
+.bm-card:hover::after {
+  opacity: 1;
+}
+@media (hover: none) {
+  .bm-card::after { display: none; }
 }
 
 .bm-image-link { display: block; overflow: hidden; }

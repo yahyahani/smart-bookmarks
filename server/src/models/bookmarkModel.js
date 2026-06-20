@@ -1,21 +1,40 @@
 const pool = require('../db');
 
-// Alle bookmarks van een gebruiker, optioneel gefilterd op zoekterm en/of tag
-async function getBookmarksByUser(userId, { search, tag } = {}) {
-  let query = 'SELECT * FROM bookmarks WHERE user_id = $1';
+// Alle bookmarks van een gebruiker, optioneel gefilterd op zoekterm, tag,
+// en/of collectie. Elke bookmark krijgt ook een `collection_ids` array mee
+// (via een subquery), zodat de frontend weet in welke collecties hij al zit
+// zonder daarvoor een aparte request te moeten doen.
+async function getBookmarksByUser(userId, { search, tag, collectionId } = {}) {
+  let query = `
+    SELECT b.*,
+      COALESCE(
+        (SELECT array_agg(bc.collection_id) FROM bookmark_collections bc WHERE bc.bookmark_id = b.id),
+        '{}'
+      ) AS collection_ids
+    FROM bookmarks b
+    WHERE b.user_id = $1
+  `;
   const params = [userId];
 
   if (search) {
     params.push(`%${search}%`);
-    query += ` AND (title ILIKE $${params.length} OR description ILIKE $${params.length})`;
+    query += ` AND (b.title ILIKE $${params.length} OR b.description ILIKE $${params.length})`;
   }
 
   if (tag) {
     params.push(tag);
-    query += ` AND $${params.length} = ANY(tags)`;
+    query += ` AND $${params.length} = ANY(b.tags)`;
   }
 
-  query += ' ORDER BY created_at DESC';
+  if (collectionId) {
+    params.push(collectionId);
+    query += ` AND EXISTS (
+      SELECT 1 FROM bookmark_collections bc
+      WHERE bc.bookmark_id = b.id AND bc.collection_id = $${params.length}
+    )`;
+  }
+
+  query += ' ORDER BY b.created_at DESC';
 
   const result = await pool.query(query, params);
   return result.rows;
