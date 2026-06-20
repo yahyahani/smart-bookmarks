@@ -13,8 +13,8 @@
 .ambient-blob {
   position: absolute;
   border-radius: 50%;
-  filter: blur(70px);
-  opacity: 0.55;
+  filter: blur(80px);
+  opacity: 0.6;
   will-change: transform;
 }
 
@@ -24,28 +24,28 @@
 }
 
 .ambient-blob-1 {
-  width: 50vmax;
-  height: 50vmax;
-  top: -15vmax;
-  inset-inline-start: -10vmax;
+  width: 60vmax;
+  height: 60vmax;
+  top: -20vmax;
+  inset-inline-start: -15vmax;
   background: var(--blob-1);
   animation: float-1 26s ease-in-out infinite;
 }
 
 .ambient-blob-2 {
-  width: 42vmax;
-  height: 42vmax;
-  top: 30vh;
-  inset-inline-end: -15vmax;
+  width: 55vmax;
+  height: 55vmax;
+  top: 10vh;
+  inset-inline-end: -20vmax;
   background: var(--blob-2);
   animation: float-2 32s ease-in-out infinite;
 }
 
 .ambient-blob-3 {
-  width: 38vmax;
-  height: 38vmax;
-  bottom: -18vmax;
-  inset-inline-start: 20vw;
+  width: 50vmax;
+  height: 50vmax;
+  bottom: -22vmax;
+  inset-inline-start: 10vw;
   background: var(--blob-3);
   animation: float-3 28s ease-in-out infinite;
 }
@@ -53,12 +53,12 @@
 /* Kleiner en sneller dan de andere drie, zorgt voor net wat extra
    compositorische beweging zonder de rustige, trage sfeer te verstoren. */
 .ambient-blob-4 {
-  width: 22vmax;
-  height: 22vmax;
-  top: 55vh;
-  inset-inline-start: 55vw;
+  width: 38vmax;
+  height: 38vmax;
+  top: 40vh;
+  inset-inline-start: 45vw;
   background: var(--blob-4);
-  opacity: 0.4;
+  opacity: 0.5;
   animation: float-4 19s ease-in-out infinite;
 }
 :root[data-theme='dark'] .ambient-blob-4 {
@@ -722,6 +722,9 @@
   flex-direction: column;
   transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease;
   animation: rise-in 0.5s ease both;
+  box-shadow: 0 12px 36px -10px var(--surface-shadow);
+}
+:root[data-theme='dark'] .bm-card {
   box-shadow: 0 8px 30px -12px var(--surface-shadow);
 }
 .bm-card:hover {

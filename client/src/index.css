@@ -12,25 +12,33 @@
   --font-display: 'Fraunces', 'Noto Sans Arabic', serif;
   --font-body: 'Inter', 'Noto Sans Arabic', sans-serif;
 
-  /* --- Licht thema (standaard) --- */
-  --bg-base: #f3ede6;
-  --ink: #211d2e;
+  /* --- Licht thema: vibrant gradient mesh, geïnspireerd op Stripe/Linear ---
+     In plaats van een neutrale achtergrond met subtiele kleurvlekken, is de
+     achtergrond hier zelf het statement: een vast, samenhangend kleurveld
+     van indigo naar violet naar roze naar cyaan. De glaskaarten erboven
+     blijven stevig wit, zodat ze duidelijk los staan van dat kleurveld. */
+  --bg-base: #f5f3ff;
+  --ink: #1e1b2e;
   --ink-soft: #5b5470;
-  --coral: #e8694a;
-  --coral-dark: #cc5439;
+  --coral: #7649e0;
+  --coral-dark: #6128c4;
 
-  /* Glas-oppervlakken: semi-transparant wit, met blur */
-  --surface: rgba(255, 255, 255, 0.55);
-  --surface-solid: rgba(255, 255, 255, 0.92);
-  --surface-border: rgba(255, 255, 255, 0.6);
-  --surface-shadow: rgba(80, 60, 100, 0.18);
-  --tag-bg: rgba(255, 255, 255, 0.55);
+  /* Glas-oppervlakken: stevig wit en ondoorzichtig, met een duidelijke
+     schaduw — de kaarten moeten als losse, tastbare vlakken ogen boven
+     het levendige verloop, niet als een extra laag transparantie erin. */
+  --surface: rgba(255, 255, 255, 0.92);
+  --surface-solid: rgba(255, 255, 255, 1);
+  --surface-border: rgba(255, 255, 255, 1);
+  --surface-shadow: rgba(76, 29, 149, 0.22);
+  --tag-bg: rgba(124, 58, 237, 0.08);
 
-  /* Blob-kleuren voor de ambient achtergrond (licht thema: zacht pastel) */
-  --blob-1: #ffb199;
-  --blob-2: #b9a4ff;
-  --blob-3: #9fe3d0;
-  --blob-4: #ffd98e;
+  /* Mesh-gradient kleuren: indigo, roze, cyaan, violet — de klassieke
+     Stripe/Linear-kleurcombinatie, hier gebruikt als vier overlappende
+     radiale verlopen die samen één doorlopend kleurveld vormen. */
+  --blob-1: #6366f1;
+  --blob-2: #ec4899;
+  --blob-3: #06b6d4;
+  --blob-4: #a855f7;
 }
 
 :root[data-theme='dark'] {
