@@ -4,7 +4,7 @@ A bookmark manager that automatically fetches a preview (title, description, ima
 
 Paste a URL, and the app scrapes the page's metadata for you, the same way Twitter or WhatsApp generates a rich preview when you share a link.
 
-![Dashboard with collections sidebar](docs/dashboard.png)
+![Dashboard with collections sidebar](docs/mesh-light.png)
 
 ## Features
 
@@ -23,9 +23,13 @@ Paste a URL, and the app scrapes the page's metadata for you, the same way Twitt
 
 ## Screenshots
 
-| Login (glassmorphism, dark mode) | Arabic interface (RTL) |
+| Dark mode | Login screen |
 |---|---|
-| ![Login screen](docs/login.png) | ![Arabic RTL layout](docs/rtl-arabic.png) |
+| ![Dashboard in dark mode](docs/mesh-dark.png) | ![Login screen](docs/mesh-login.png) |
+
+| Arabic interface (RTL) |
+|---|
+| ![Arabic RTL layout](docs/mesh-arabic.png) |
 
 ## Tech stack
 
@@ -139,7 +143,9 @@ The UI is available in Dutch, English, and Arabic via a small custom i18n system
 
 ## Theming
 
-Light and dark mode are implemented as a set of CSS custom properties (`client/src/index.css`) that switch based on a `data-theme` attribute on the `<html>` element. Components only ever reference semantic variables like `--surface` or `--ink` — they don't know or care which theme is active. The animated background blobs and `backdrop-filter` glass panels are what make the theme switch feel alive rather than just a color swap.
+Light and dark mode are implemented as a set of CSS custom properties (`client/src/index.css`) that switch based on a `data-theme` attribute on the `<html>` element. Components only ever reference semantic variables like `--surface` or `--ink` — they don't know or care which theme is active.
+
+The light theme uses a vibrant gradient mesh background (indigo → pink → cyan → violet, Stripe/Linear-style), with solid white cards that visibly "float" above it thanks to a strong shadow and full opacity. The dark theme uses the same animated blob technique but with deeper colors and lower opacity, paired with semi-transparent glass cards (`backdrop-filter`) — a different mood for a different mode, rather than the same look with inverted colors.
 
 ## Project structure
 
