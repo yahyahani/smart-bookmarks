@@ -233,6 +233,23 @@
   z-index: 2;
 }
 
+/* Op een smal telefoonscherm staat de auth-card vaak verticaal gecentreerd
+   en bijna schermbreed — zonder deze aanpassing kan de taal/thema-balk
+   rechtsboven gedeeltelijk over de kaart heen vallen. We maken de balk
+   hier compacter en laten 'm relatief stromen in plaats van vast te
+   pinnen, zodat hij altijd boven de kaart blijft staan. */
+@media (max-width: 420px) {
+  .auth-lang-bar {
+    position: relative;
+    top: 0;
+    inset-inline-end: 0;
+    justify-content: flex-end;
+    width: 100%;
+    max-width: 380px;
+    margin-bottom: 1rem;
+  }
+}
+
 /* ============================================================
    AUTH PAGINA
    ============================================================ */
@@ -244,6 +261,14 @@
   align-items: center;
   justify-content: center;
   padding: 2rem 1rem;
+}
+
+@media (max-width: 420px) {
+  .auth-page {
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-top: 2.5rem;
+  }
 }
 
 .auth-card {
@@ -543,6 +568,18 @@
   gap: 0.7rem;
   font-size: 0.88rem;
   color: var(--ink-soft);
+  flex-wrap: wrap;
+}
+
+/* Op kleine schermen is er simpelweg niet genoeg breedte voor theme-toggle +
+   taal + e-mail + selecteren + uitloggen op één rij. Het e-mailadres is
+   het minst functionele element hier (de gebruiker weet wie hij is), dus
+   dat verbergen we als eerste om ruimte te maken voor de knoppen die
+   daadwerkelijk iets doen. */
+@media (max-width: 480px) {
+  .dashboard-user-email {
+    display: none;
+  }
 }
 
 .add-form {

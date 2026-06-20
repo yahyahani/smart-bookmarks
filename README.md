@@ -18,6 +18,7 @@ Paste a URL, and the app scrapes the page's metadata for you, the same way Twitt
 - 🔒 **Per-user data isolation** — every user only ever sees their own bookmarks
 - 🌍 **Multi-language** — Dutch, English, and Arabic, with full RTL layout support
 - 🌗 **Light & dark mode** — glassmorphism design with an animated ambient background
+- 📱 **Responsive** — usable down to a 375px-wide phone screen, not just a scaled-down desktop layout
 - 🐳 **Dockerized** — run the entire stack (database, API, frontend) with one command
 - 🧪 **Tested** — unit tests for input validation and the scraping logic
 
@@ -174,7 +175,7 @@ smart-bookmarks/
 
 ## What I learned building this
 
-This project started as practice for full-stack fundamentals — JWT-based authentication, relational database design with foreign keys (including a many-to-many relationship for collections), building a REST API with proper authorization checks, and basic web scraping with Cheerio. It grew from there into a few more advanced areas: implementing real RTL support instead of just translating text, building a theme system with CSS custom properties, containerizing a multi-service app with Docker Compose, and writing unit tests with mocked network calls.
+This project started as practice for full-stack fundamentals — JWT-based authentication, relational database design with foreign keys (including a many-to-many relationship for collections), building a REST API with proper authorization checks, and basic web scraping with Cheerio. It grew from there into a few more advanced areas: implementing real RTL support instead of just translating text, building a theme system with CSS custom properties, containerizing a multi-service app with Docker Compose, writing unit tests with mocked network calls, and making sure the UI actually holds up at phone-sized viewports (a popover that positions itself dynamically, a header that needs to gracefully drop the least essential element first, a layout that stacks instead of squeezing).
 
 ## License
 

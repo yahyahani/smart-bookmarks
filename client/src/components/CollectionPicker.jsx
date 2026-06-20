@@ -17,13 +17,23 @@ export default function CollectionPicker({ collections, selectedIds, onToggle, o
   useEffect(() => {
     if (anchorRef?.current) {
       const rect = anchorRef.current.getBoundingClientRect();
+      const popoverWidth = 200; // moet overeenkomen met .collection-picker min-width + wat marge
+      const margin = 12;
+
       // Let op: dit gebruikt altijd de fysieke linkerkant van de knop,
       // ook in RTL-modus (Arabisch). Het popover blijft daardoor altijd
       // zichtbaar en bruikbaar, maar spiegelt niet automatisch mee zoals
       // de rest van de interface. Voor een toekomstige verbetering zou
       // je hier document.documentElement.dir kunnen checken en de
       // berekening aanpassen naar rect.right - popoverWidth voor RTL.
-      setPosition({ top: rect.bottom + 6, left: rect.left });
+      let left = rect.left;
+      // Op een smal scherm (telefoon) kan de knop dicht bij de rechterrand
+      // staan — zonder deze correctie zou het popover daar voorbij steken
+      // en gedeeltelijk onbereikbaar worden.
+      const maxLeft = window.innerWidth - popoverWidth - margin;
+      if (left > maxLeft) left = Math.max(margin, maxLeft);
+
+      setPosition({ top: rect.bottom + 6, left });
     }
   }, [anchorRef]);
 

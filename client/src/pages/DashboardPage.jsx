@@ -289,7 +289,7 @@ export default function DashboardPage({ user, onLogout }) {
         <div className="dashboard-user">
           <ThemeToggle />
           <LanguageSwitcher />
-          <span>{user.email}</span>
+          <span className="dashboard-user-email">{user.email}</span>
           <button type="button" className="btn-ghost" onClick={toggleSelectMode}>
             {selectMode ? t('selectModeExit') : t('selectModeToggle')}
           </button>
