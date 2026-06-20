@@ -4,17 +4,28 @@ A bookmark manager that automatically fetches a preview (title, description, ima
 
 Paste a URL, and the app scrapes the page's metadata for you, the same way Twitter or WhatsApp generates a rich preview when you share a link.
 
+![Dashboard with collections sidebar](docs/dashboard.png)
+
 ## Features
 
 - 🔐 **Authentication** — secure registration and login with JWT and bcrypt password hashing
 - 🔗 **Automatic link previews** — scrapes title, description, image, and favicon from any URL using Open Graph metadata
-- 🏷️ **Tags** — organize bookmarks with custom tags
-- 🔍 **Search** — filter bookmarks by title, description, or tag
-- 🗑️ **Full CRUD** — add, update, and delete bookmarks
+- 🏷️ **Tags** — organize bookmarks with custom tags, click any tag to filter by it
+- 📁 **Collections** — organize bookmarks into folders; a bookmark can belong to multiple collections at once
+- 🔍 **Search & sort** — filter by title/description, sort by date or alphabetically
+- ☑️ **Bulk actions** — select multiple bookmarks to tag or delete them at once
+- ✏️ **Full CRUD** — add, edit, and delete bookmarks, with a confirmation step before deleting
 - 🔒 **Per-user data isolation** — every user only ever sees their own bookmarks
 - 🌍 **Multi-language** — Dutch, English, and Arabic, with full RTL layout support
 - 🌗 **Light & dark mode** — glassmorphism design with an animated ambient background
 - 🐳 **Dockerized** — run the entire stack (database, API, frontend) with one command
+- 🧪 **Tested** — unit tests for input validation and the scraping logic
+
+## Screenshots
+
+| Login (glassmorphism, dark mode) | Arabic interface (RTL) |
+|---|---|
+| ![Login screen](docs/login.png) | ![Arabic RTL layout](docs/rtl-arabic.png) |
 
 ## Tech stack
 
@@ -23,6 +34,7 @@ Paste a URL, and the app scrapes the page's metadata for you, the same way Twitt
 - PostgreSQL (via `pg`)
 - JWT for authentication, bcrypt for password hashing
 - Cheerio for HTML parsing / web scraping
+- Vitest for unit tests
 
 **Frontend**
 - React (Vite)
@@ -30,10 +42,6 @@ Paste a URL, and the app scrapes the page's metadata for you, the same way Twitt
 
 **Infrastructure**
 - Docker + Docker Compose (Postgres, Express API, and an nginx-served frontend build)
-
-## Screenshots
-
-*(Add a screenshot or two here — drag an image into the GitHub README editor, or place it in a `docs/` folder and reference it with `![Dashboard](docs/dashboard.png)`)*
 
 ## Getting started
 
@@ -97,16 +105,31 @@ npm run dev
 ```
 App runs on `http://localhost:5173`.
 
+## Running the tests
+
+```bash
+cd server
+npm test
+```
+
+Unit tests cover input validation (email, password, URL, tag sanitization) and the scraping logic (metadata extraction, error handling for non-HTML responses, oversized pages), using a mocked `fetch` so no real network calls are made.
+
 ## API overview
 
-| Method | Endpoint              | Description                          | Auth required |
-|--------|------------------------|---------------------------------------|----------------|
-| POST   | `/api/auth/register`   | Create a new account                  | No             |
-| POST   | `/api/auth/login`      | Log in and receive a JWT              | No             |
-| GET    | `/api/bookmarks`       | List bookmarks (supports `?search=` and `?tag=`) | Yes |
-| POST   | `/api/bookmarks`       | Add a bookmark (scrapes metadata automatically) | Yes |
-| PATCH  | `/api/bookmarks/:id`   | Update a bookmark's title or tags     | Yes            |
-| DELETE | `/api/bookmarks/:id`   | Delete a bookmark                     | Yes            |
+| Method | Endpoint                                   | Description                                       | Auth required |
+|--------|---------------------------------------------|----------------------------------------------------|----------------|
+| POST   | `/api/auth/register`                        | Create a new account                                | No             |
+| POST   | `/api/auth/login`                           | Log in and receive a JWT                            | No             |
+| GET    | `/api/bookmarks`                            | List bookmarks (`?search=`, `?tag=`, `?collection=`) | Yes            |
+| POST   | `/api/bookmarks`                            | Add a bookmark (scrapes metadata automatically)      | Yes            |
+| PATCH  | `/api/bookmarks/:id`                        | Update a bookmark's title or tags                    | Yes            |
+| DELETE | `/api/bookmarks/:id`                        | Delete a bookmark                                    | Yes            |
+| GET    | `/api/collections`                          | List collections, with bookmark counts              | Yes            |
+| POST   | `/api/collections`                          | Create a collection                                  | Yes            |
+| PATCH  | `/api/collections/:id`                      | Rename a collection or change its color              | Yes            |
+| DELETE | `/api/collections/:id`                      | Delete a collection (bookmarks stay, only the collection is removed) | Yes |
+| POST   | `/api/collections/:id/bookmarks/:bookmarkId`| Add a bookmark to a collection                       | Yes            |
+| DELETE | `/api/collections/:id/bookmarks/:bookmarkId`| Remove a bookmark from a collection                  | Yes            |
 
 Authenticated requests require an `Authorization: Bearer <token>` header.
 
@@ -130,7 +153,7 @@ smart-bookmarks/
 │       ├── models/         # Database queries
 │       ├── middleware/     # JWT auth middleware
 │       ├── routes/         # API route definitions
-│       ├── utils/          # Web scraping logic
+│       ├── utils/          # Web scraping, validation (+ tests)
 │       └── db/             # Database connection + schema
 └── client/                 # React frontend
     ├── Dockerfile
@@ -145,7 +168,7 @@ smart-bookmarks/
 
 ## What I learned building this
 
-This project started as practice for full-stack fundamentals — JWT-based authentication, relational database design with foreign keys, building a REST API with proper authorization checks, and basic web scraping with Cheerio. It grew from there into a few more advanced areas: implementing real RTL support instead of just translating text, building a theme system with CSS custom properties, and containerizing a multi-service app with Docker Compose.
+This project started as practice for full-stack fundamentals — JWT-based authentication, relational database design with foreign keys (including a many-to-many relationship for collections), building a REST API with proper authorization checks, and basic web scraping with Cheerio. It grew from there into a few more advanced areas: implementing real RTL support instead of just translating text, building a theme system with CSS custom properties, containerizing a multi-service app with Docker Compose, and writing unit tests with mocked network calls.
 
 ## License
 

@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { createUser, findUserByEmail } = require('../models/userModel');
+const { isValidEmail, isValidPassword } = require('../utils/validation');
 
 const SALT_ROUNDS = 10;
 
@@ -9,23 +10,27 @@ async function register(req, res) {
   try {
     const { email, password } = req.body;
 
-    // Basisvalidatie
     if (!email || !password) {
       return res.status(400).json({ error: 'E-mail en wachtwoord zijn verplicht' });
     }
-    if (password.length < 6) {
-      return res.status(400).json({ error: 'Wachtwoord moet minimaal 6 tekens zijn' });
+    if (!isValidEmail(email)) {
+      return res.status(400).json({ error: 'Vul een geldig e-mailadres in' });
+    }
+    if (!isValidPassword(password)) {
+      return res.status(400).json({ error: 'Wachtwoord moet tussen 6 en 200 tekens zijn' });
     }
 
-    // Check of de gebruiker al bestaat
-    const existingUser = await findUserByEmail(email);
+    // Check of de gebruiker al bestaat (genormaliseerd naar lowercase,
+    // zodat "Test@Mail.com" en "test@mail.com" als dezelfde gebruiker tellen)
+    const normalizedEmail = email.trim().toLowerCase();
+    const existingUser = await findUserByEmail(normalizedEmail);
     if (existingUser) {
       return res.status(409).json({ error: 'Er bestaat al een account met dit e-mailadres' });
     }
 
     // Wachtwoord versleutelen en gebruiker aanmaken
     const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
-    const newUser = await createUser(email, passwordHash);
+    const newUser = await createUser(normalizedEmail, passwordHash);
 
     // Direct een token geven zodat de gebruiker meteen ingelogd is
     const token = jwt.sign(
@@ -54,7 +59,8 @@ async function login(req, res) {
       return res.status(400).json({ error: 'E-mail en wachtwoord zijn verplicht' });
     }
 
-    const user = await findUserByEmail(email);
+    const normalizedEmail = email.trim().toLowerCase();
+    const user = await findUserByEmail(normalizedEmail);
     if (!user) {
       // Bewust dezelfde foutmelding als bij verkeerd wachtwoord,
       // zodat een aanvaller niet kan raden welke e-mails bestaan.

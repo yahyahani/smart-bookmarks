@@ -30,6 +30,7 @@
   --blob-1: #ffb199;
   --blob-2: #b9a4ff;
   --blob-3: #9fe3d0;
+  --blob-4: #ffd98e;
 }
 
 :root[data-theme='dark'] {
@@ -49,6 +50,7 @@
   --blob-1: #ff6b4a;
   --blob-2: #6c4cff;
   --blob-3: #2dd4bf;
+  --blob-4: #ffb84d;
 }
 
 * {
