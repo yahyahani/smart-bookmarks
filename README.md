@@ -74,6 +74,13 @@ This starts three containers:
 | `server` | Express API                          | http://localhost:3001   |
 | `client` | React app, built and served via nginx | http://localhost:5174  |
 
+> **Poort al in gebruik?** Poort 5174 (client) en 3001 (server) kunnen bezet zijn door een lokaal dev-proces dat je eerder bent vergeten te stoppen (bijv. een achtergrond-`npm run dev` of Vite). Als de app niet bereikbaar is, controleer dit dan eerst:
+> ```bash
+> lsof -i :5174
+> lsof -i :3001
+> ```
+> Stop eventuele gevonden processen met `kill <PID>` voordat je de container opnieuw start.
+
 Open **http://localhost:5174** in your browser. Stop everything with `Ctrl+C`, or `docker compose down` to also remove the containers (add `-v` to also wipe the database volume).
 
 ### Option B — Run directly with Node.js
